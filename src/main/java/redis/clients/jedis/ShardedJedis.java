@@ -757,7 +757,7 @@ public class ShardedJedis extends BinaryShardedJedis implements JedisCommands, C
   /**
    * This method is deprecated due to bug (scan cursor should be unsigned long)
    * And will be removed on next major release
-   * @see https://github.com/xetorthio/jedis/issues/531 
+   * @see https://github.com/xetorthio/jedis/issues/531
    */
   public ScanResult<Entry<String, String>> hscan(String key, int cursor) {
     Jedis j = getShard(key);
@@ -768,7 +768,7 @@ public class ShardedJedis extends BinaryShardedJedis implements JedisCommands, C
   /**
    * This method is deprecated due to bug (scan cursor should be unsigned long)
    * And will be removed on next major release
-   * @see https://github.com/xetorthio/jedis/issues/531 
+   * @see https://github.com/xetorthio/jedis/issues/531
    */
   public ScanResult<String> sscan(String key, int cursor) {
     Jedis j = getShard(key);
@@ -779,7 +779,7 @@ public class ShardedJedis extends BinaryShardedJedis implements JedisCommands, C
   /**
    * This method is deprecated due to bug (scan cursor should be unsigned long)
    * And will be removed on next major release
-   * @see https://github.com/xetorthio/jedis/issues/531 
+   * @see https://github.com/xetorthio/jedis/issues/531
    */
   public ScanResult<Tuple> zscan(String key, int cursor) {
     Jedis j = getShard(key);
@@ -833,13 +833,13 @@ public class ShardedJedis extends BinaryShardedJedis implements JedisCommands, C
           break;
         }
       }
-
-      if (broken) {
-        dataSource.returnBrokenResource(this);
-      } else {
-        dataSource.returnResource(this);
-      }
+      Pool<ShardedJedis> pool = this.dataSource;
       this.dataSource = null;
+      if (broken) {
+        pool.returnBrokenResource(this);
+      } else {
+        pool.returnResource(this);
+      }
 
     } else {
       disconnect();
